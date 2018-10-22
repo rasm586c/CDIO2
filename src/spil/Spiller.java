@@ -10,7 +10,7 @@ public class Spiller {
     }
 
     // Ændrer spillerens penge med delta
-    public  int changeMoney(int delta) { money += delta; }
+    public  void changeMoney(int delta) { money += delta; }
 
     public String getName() { return name; }
     public int getMoney() { return money; }
