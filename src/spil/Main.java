@@ -1,60 +1,96 @@
 package spil;
 
-public class Main {
-    public static void main(String[] args) {
-        Field[] fields = createFields();
+import sun.security.provider.ConfigFile;
 
-        Spiller[] spillers = new Spiller[] {
-            new Spiller("Jens"),
-            new Spiller("Børge")
-        };
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        Field[] fields = createFields();
+        Spiller[] spillers = getPlayers();
 
         Raflebæger raflebæger = new Raflebæger();
+        Spiller vinder = startGame(fields, raflebæger, spillers);
 
+        printVinder(vinder);
+        printSpilInfo(spillers);
+    }
+
+    static void printVinder(Spiller vinder) {
+        clearConsole();
+        System.out.printf("Tillykke %s du har vundet!", vinder.getName());
+    }
+
+    // Retunerer vinderen
+    static Spiller startGame(Field[] fields, Raflebæger raflebæger, Spiller... spillers) throws IOException {
         int spillerTur = 0;
         while (true) {
             Spiller nuværendeSpiller = spillers[spillerTur];
-            System.out.println("Det er nu %s tur!", nuværendeSpiller.getName());
+            System.out.printf("%s TUR (Du har %d penge): \n", nuværendeSpiller.getName(), nuværendeSpiller.getMoney());
 
-            // Kast terninger!
-            castDices(raflebæger);
+            castDices(raflebæger, nuværendeSpiller.getName());
+            Field field = fields[raflebæger.getTerningSum() - 1];
 
-            // Find field ud fra terning sum
-            Field field = fields[raflebæger.getTerningSum()];
+            System.out.println(field.fieldText);
 
-            // Ændrer penge baseret på field værdi!
             nuværendeSpiller.changeMoney(field.value);
-
-            // Har spilleren vundet?
             if (nuværendeSpiller.getMoney() > 3000) {
-                System.out.printf("Tillykke %s du har vundet!", nuværendeSpiller.getName());
                 break;
             }
 
-            // Får spilleren en ekstra tur? Ellers er det næste spillers tur!
+            System.out.println();
+
             if (!field.getsAnotherTurn) {
-                spillerTur++;
+                spillerTur = spillerTur + 1 == spillers.length ? 0 : spillerTur + 1;
+                System.out.printf("Tryk enter for at fortsætte gå til %s tur\n", spillers[spillerTur].getName());
+            } else {
+                System.out.println("Tryk enter for at få en tur mere!");
             }
+
+            System.in.read();
+            clearConsole();
+        }
+
+        return spillers[spillerTur];
+    }
+
+    static Spiller[] getPlayers() {
+        return new Spiller[] {
+                new Spiller("Jens"),
+                new Spiller("Børge")
+        };
+    }
+
+    static void printSpilInfo(Spiller... spillers) {
+        System.out.println();
+        System.out.println("---------------------------------");
+        for (int i = 0; i < spillers.length; i++) {
+            System.out.printf("%s sluttede med %d penge!\n", spillers[i].getName(), spillers[i].getMoney());
         }
     }
 
-    static void castDices(Raflebæger raflebæger) {
+    static void castDices(Raflebæger raflebæger, String player) {
         int[] terningResultater = raflebæger.kastTerninger();
-        System.out.printf("Spilleren kastede slog %d og %d!\n", terningResultater[0], terningResultater[1]);
+        System.out.printf("%s slog %d og %d!\n", player, terningResultater[0], terningResultater[1]);
     }
+
+    static void clearConsole() {
+        for (int i = 0; i < 50; ++i) System.out.println();
+    }
+
     static Field[] createFields() {
         return new Field[] {
                 null, // Man kan ikke slå 1 med 2 terninger!
-                new Field("Tower", 250, ""),
-                new Field("Crater", -100, ""),
-                new Field("Palace Gates", 100, ""),
-                new Field("Cold Desert", -20, ""),
-                new Field("Walled City", 180, ""),
-                new Field("Monastery", 0, ""),
-                new Field("Black Cave", -70, ""),
-                new Field("Huts in the mountain", 60, ""),
-                new Field("The Werewall (werewolf-wall)", -80, "", true),
-                new Field("The pit", -50, ""),
+                new Field("Tower", 250, "Du har fundet tårne, og finder gamle skatte. Du får 250 !"),
+                new Field("Crater", -100, "Du faldt ned i et krater og mistede 100 :("),
+                new Field("Palace Gates", 100, "Du kom til et palads! 100 til dig!"),
+                new Field("Cold Desert", -20, "Du landede i en kold ørken. Øv! -20"),
+                new Field("Walled City", 180, "Du fandt walled city! Du får 180"),
+                new Field("Monastery", 0, "Du kom til monastery og fik ingenting"),
+                new Field("Black Cave", -70, "Du befinder dig nu i en sort grotte, -70"),
+                new Field("Huts in the mountain", 60, "Du fandt nogle små hytter på et bjerg! Og får 60!"),
+                new Field("The Werewall (werewolf-wall)", -80, "Øv! Du kom til varulve grotten og mistede 80! Men du får en ekstra tur!", true),
+                new Field("The pit", -50, "Du landede på the pit og mistede 50"),
                 new Field("The goldmine", 650, "Du har fundet guld i bjergene og sælger det for 650, du er rig!"),
         };
     }
