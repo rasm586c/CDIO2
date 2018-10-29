@@ -8,7 +8,7 @@ public class Konto {
         else this.money = money;
     }
 
-    void changeMoney(int amount) {
+    public void changeMoney(int amount) {
         this.money += amount;
         if (this.money < 0) money = 0;
     }

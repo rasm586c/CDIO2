@@ -1,29 +1,47 @@
 package spil;
 
-import sun.security.provider.ConfigFile;
-
 import java.io.IOException;
 
-public class Main {
-    public static void main(String[] args) throws IOException {
-        Field[] fields = createFields();
-        Spiller[] spillers = getPlayers();
+public class TerningSpil {
+    Field[] fields;
+    Spiller[] spillers;
+    Raflebæger raflebæger;
 
-        Raflebæger raflebæger = new Raflebæger();
-        Spiller vinder = startGame(fields, raflebæger, spillers);
+    TerningSpil() {
+        fields = createFields();
+        raflebæger = new Raflebæger();
+        this.spillers = getPlayers();
+    }
 
+    public void startSpil() throws IOException {
+        Spiller vinder = findVinder();
         printVinder(vinder);
         printSpilInfo(spillers);
     }
 
-    static void printVinder(Spiller vinder) {
-        clearConsole();
+    static Spiller[] getPlayers() {
+        return new Spiller[] {
+                new Spiller("Jens"),
+                new Spiller("Børge")
+        };
+    }
+
+    private void printVinder(Spiller vinder) {
+        System.out.println("-----------------------");
         System.out.printf("Tillykke %s du har vundet!", vinder.getName());
     }
 
-    // Retunerer vinderen
-    static Spiller startGame(Field[] fields, Raflebæger raflebæger, Spiller... spillers) throws IOException {
+    private void printSpilInfo(Spiller... spillers) {
+        System.out.println();
+        System.out.println("---------------------------------");
+        for (int i = 0; i < spillers.length; i++) {
+            System.out.printf("%s sluttede med %d penge!\n", spillers[i].getName(), spillers[i].getMoney());
+        }
+    }
+
+    private Spiller findVinder() throws IOException {
         int spillerTur = 0;
+
         while (true) {
             Spiller nuværendeSpiller = spillers[spillerTur];
             System.out.printf("%s TUR (Du har %d penge): \n", nuværendeSpiller.getName(), nuværendeSpiller.getMoney());
@@ -54,31 +72,16 @@ public class Main {
         return spillers[spillerTur];
     }
 
-    static Spiller[] getPlayers() {
-        return new Spiller[] {
-                new Spiller("Jens"),
-                new Spiller("Børge")
-        };
-    }
-
-    static void printSpilInfo(Spiller... spillers) {
-        System.out.println();
-        System.out.println("---------------------------------");
-        for (int i = 0; i < spillers.length; i++) {
-            System.out.printf("%s sluttede med %d penge!\n", spillers[i].getName(), spillers[i].getMoney());
-        }
-    }
-
-    static void castDices(Raflebæger raflebæger, String player) {
+    private void castDices(Raflebæger raflebæger, String player) {
         int[] terningResultater = raflebæger.kastTerninger();
         System.out.printf("%s slog %d og %d!\n", player, terningResultater[0], terningResultater[1]);
     }
 
-    static void clearConsole() {
+    private void clearConsole() {
         for (int i = 0; i < 50; ++i) System.out.println();
     }
 
-    static Field[] createFields() {
+    private Field[] createFields() {
         return new Field[] {
                 null, // Man kan ikke slå 1 med 2 terninger!
                 new Field("Tower", 250, "Du har fundet tårne, og finder gamle skatte. Du får 250 !"),
