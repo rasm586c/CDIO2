@@ -2,65 +2,65 @@ package spil;
 
 import java.io.IOException;
 
-public class TerningSpil {
+public class DiceGame {
     Field[] fields;
-    Spiller[] spillers;
-    Raflebæger raflebæger;
+    Player[] players;
+    DiceCup diceCup;
 
-    TerningSpil() {
+    DiceGame() {
         fields = createFields();
-        raflebæger = new Raflebæger();
-        this.spillers = getPlayers();
+        diceCup = new DiceCup();
+        this.players = getPlayers();
     }
 
-    public void startSpil() throws IOException {
-        Spiller vinder = findVinder();
-        printVinder(vinder);
-        printSpilInfo(spillers);
+    public void startGame() throws IOException {
+        Player winner = getWinner();
+        printWinner(winner);
+        printGameInfo(players);
     }
 
-    static Spiller[] getPlayers() {
-        return new Spiller[] {
-                new Spiller("Jens"),
-                new Spiller("Børge")
+    static Player[] getPlayers() {
+        return new Player[] {
+                new Player("Jens"),
+                new Player("Børge")
         };
     }
 
-    private void printVinder(Spiller vinder) {
+    private void printWinner(Player winner) {
         System.out.println("-----------------------");
-        System.out.printf("Tillykke %s du har vundet!", vinder.getName());
+        System.out.printf("Tillykke %s du har vundet!", winner.getName());
     }
 
-    private void printSpilInfo(Spiller... spillers) {
+    private void printGameInfo(Player... players) {
         System.out.println();
         System.out.println("---------------------------------");
-        for (int i = 0; i < spillers.length; i++) {
-            System.out.printf("%s sluttede med %d penge!\n", spillers[i].getName(), spillers[i].getMoney());
+        for (int i = 0; i < players.length; i++) {
+            System.out.printf("%s sluttede med %d penge!\n", players[i].getName(), players[i].getMoney());
         }
     }
 
-    private Spiller findVinder() throws IOException {
-        int spillerTur = 0;
+    private Player getWinner() throws IOException {
+        int playerTurn = 0;
 
         while (true) {
-            Spiller nuværendeSpiller = spillers[spillerTur];
-            System.out.printf("%s TUR (Du har %d penge): \n", nuværendeSpiller.getName(), nuværendeSpiller.getMoney());
+            Player currentPlayer = players[playerTurn];
+            System.out.printf("%s TUR (Du har %d penge): \n", currentPlayer.getName(), currentPlayer.getMoney());
 
-            castDices(raflebæger, nuværendeSpiller.getName());
-            Field field = fields[raflebæger.getTerningSum() - 1];
+            castDices(diceCup, currentPlayer.getName());
+            Field field = fields[diceCup.getDiceSum() - 1];
 
             System.out.println(field.fieldText);
 
-            nuværendeSpiller.changeMoney(field.value);
-            if (nuværendeSpiller.getMoney() > 3000) {
+            currentPlayer.changeMoney(field.value);
+            if (currentPlayer.getMoney() > 3000) {
                 break;
             }
 
             System.out.println();
 
             if (!field.getsAnotherTurn) {
-                spillerTur = spillerTur + 1 == spillers.length ? 0 : spillerTur + 1;
-                System.out.printf("Tryk enter for at fortsætte gå til %s tur\n", spillers[spillerTur].getName());
+                playerTurn = playerTurn + 1 == players.length ? 0 : playerTurn + 1;
+                System.out.printf("Tryk enter for at fortsætte gå til %s tur\n", players[playerTurn].getName());
             } else {
                 System.out.println("Tryk enter for at få en tur mere!");
             }
@@ -69,11 +69,11 @@ public class TerningSpil {
             clearConsole();
         }
 
-        return spillers[spillerTur];
+        return players[playerTurn];
     }
 
-    private void castDices(Raflebæger raflebæger, String player) {
-        int[] terningResultater = raflebæger.kastTerninger();
+    private void castDices(DiceCup diceCup, String player) {
+        int[] terningResultater = diceCup.castDices();
         System.out.printf("%s slog %d og %d!\n", player, terningResultater[0], terningResultater[1]);
     }
 

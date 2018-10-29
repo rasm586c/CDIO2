@@ -1,9 +1,9 @@
 package spil;
 
-public class Konto {
+public class Account {
     int money;
 
-    Konto(int money){
+    Account(int money){
         if (money < 0) this.money = 0;
         else this.money = money;
     }

@@ -2,27 +2,27 @@ package spil;
 
 import java.util.Random;
 
-public class Terning {
+public class Dice {
     Random random;
-    int værdi = 1;
+    int value = 1;
     final int diceSides;
 
-    Terning() {
+    Dice() {
         this.random = new Random();
         diceSides = 6;
     }
 
-    Terning(int diceSides) { // Flere sider!!
+    Dice(int diceSides) { // Flere sider!!
         this.random = new Random();
         this.diceSides = diceSides;
     }
 
     // Retunerer en værdi mellem 1-6
-    public int kast() {
+    public int cast() {
         random = new Random(random.nextInt());//tving ny random per kald
-        værdi = random.nextInt(6)+1;
-        return værdi;
+        value = random.nextInt(6)+1;
+        return value;
     }
 
-    public int getVærdi() { return værdi; }
+    public int getValue() { return value; }
 }
