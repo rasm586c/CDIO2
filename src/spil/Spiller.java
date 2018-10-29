@@ -2,16 +2,16 @@ package spil;
 
 public class Spiller {
     final String name;
-    int money;
+    Konto konto;
 
     public Spiller(String name) {
         this.name = name;
-        money = 1000;
+        konto = new Konto(1000);
     }
 
-    // Ændrer spillerens penge med delta
-    public  void changeMoney(int delta) { money += delta; }
+    // Ændrer spillerens penge med amount
+    public  void changeMoney(int amount) { konto.changeMoney(amount); }
 
     public String getName() { return name; }
-    public int getMoney() { return money; }
+    public int getMoney() { return konto.money; }
 }
