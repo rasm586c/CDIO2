@@ -10,8 +10,8 @@ public class Player {
     }
 
     // Ændrer spillerens penge med amount
-    public  void changeMoney(int amount) { account.changeMoney(amount); }
+    public  void changeMoney(int amount) { account.changeBalance(amount); }
 
     public String getName() { return name; }
-    public int getMoney() { return account.money; }
+    public int getMoney() { return account.getBalance(); }
 }

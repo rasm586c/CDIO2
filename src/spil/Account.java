@@ -1,15 +1,19 @@
 package spil;
 
 public class Account {
-    int money;
+    int balance;
 
-    Account(int money){
-        if (money < 0) this.money = 0;
-        else this.money = money;
+    Account(int balance){
+        if (balance < 0) this.balance = 0;
+        else this.balance = 0;
     }
 
-    public void changeMoney(int amount) {
-        this.money += amount;
-        if (this.money < 0) money = 0;
+    public void changeBalance(int amount) {
+        this.balance += amount;
+        if (this.balance < 0) balance = 0;
+    }
+
+    public int getBalance() {
+        return balance;
     }
 }

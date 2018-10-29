@@ -26,7 +26,7 @@ public class DiceCup {
         return sum;
     }
 
-    public boolean erEns() {
+    public boolean isEqual() {
         for (int i = 0; i < dice.length; i++) {
             for (int j = 0; j < dice.length; j++) {
                 if (dice[i] != dice[j]) return false;
