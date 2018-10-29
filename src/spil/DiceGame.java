@@ -73,7 +73,7 @@ public class DiceGame {
     }
 
     private void castDices(DiceCup diceCup, String player) {
-        int[] terningResultater = diceCup.castDices();
+        int[] terningResultater = diceCup.castDice();
         System.out.printf("%s slog %d og %d!\n", player, terningResultater[0], terningResultater[1]);
     }
 

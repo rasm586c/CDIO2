@@ -8,13 +8,13 @@ public class DiceCup {
     }
 
     // Kaster begge terninger og retunerer dette
-    public int[] castDices() {
+    public int[] castDice() {
         int[] kast = new int[dice.length];
 
         // Her laver vi kastne
         for (int i = 0; i < dice.length; i++) {
             Dice terning = dice[i];
-            kast[i] = terning.cast();
+            kast[i] = terning.castDie();
         }
 
         return kast;

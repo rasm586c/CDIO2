@@ -18,7 +18,7 @@ public class Dice {
     }
 
     // Retunerer en værdi mellem 1-6
-    public int cast() {
+    public int castDie() {
         random = new Random(random.nextInt());//tving ny random per kald
         value = random.nextInt(6)+1;
         return value;
